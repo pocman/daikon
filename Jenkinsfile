@@ -77,6 +77,11 @@ spec:
             """
           }
         }
+        slackSend(
+          color: JobState.SUCCESSFUL.color,
+          channel: 'daikon',
+          message: '(TEST) Daikon version ' + params.release_version + ' released. Next version: ' + params.next_version
+        )
       }
     }
 
@@ -158,13 +163,11 @@ spec:
                 }
               }
             }
-            script {
-              slackSend(
-                color: JobState.SUCCESSFUL.color,
-                channel: 'daikon',
-                message: 'Daikon version ' + params.release_version + ' released. Next version: ' + params.next_version
-              )
-            }
+            slackSend(
+              color: JobState.SUCCESSFUL.color,
+              channel: 'daikon',
+              message: 'Daikon version ' + params.release_version + ' released. Next version: ' + params.next_version
+            )
         }
     }
   }
