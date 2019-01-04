@@ -78,9 +78,9 @@ spec:
           }
         }
         slackSend(
-          color: JobState.SUCCESSFUL.color,
+          color: 'GREEN',
           channel: 'daikon',
-          message: '(TEST) Daikon version ' + params.release_version + ' released. Next version: ' + params.next_version
+          message: '(TEST) Daikon version ${params.release_version} released. Next version: ${params.next_version}'
         )
       }
     }
