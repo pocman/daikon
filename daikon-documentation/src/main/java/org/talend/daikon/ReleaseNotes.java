@@ -57,12 +57,17 @@ public class ReleaseNotes extends AbstractMojo {
             LOGGER.debug("Jira version: {}", jiraVersion);
 
             // Create Jira client
-            LOGGER.info("Connecting using '{}' / '{}'", jiraUser, StringUtils.isEmpty(jiraPassword) ? "<empty>" : "****");
+            LOGGER
+                    .info("Connecting using '{}' / '{}'", jiraUser,
+                            StringUtils.isEmpty(jiraPassword) ? "<empty>" : "****");
             final JiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
 
-            final JiraRestClient client = factory.createWithBasicHttpAuthentication(jiraServerUri, jiraUser, jiraPassword);
-            final Promise<SearchResult> results = client.getSearchClient()
-                    .searchJql("project = '" + projectName + "' and fixVersion='" + jiraVersion + "' and resolution = Fixed");
+            final JiraRestClient client =
+                    factory.createWithBasicHttpAuthentication(jiraServerUri, jiraUser, jiraPassword);
+            final Promise<SearchResult> results = client
+                    .getSearchClient()
+                    .searchJql("project = '" + projectName + "' and fixVersion='" + jiraVersion
+                            + "' and resolution = Fixed");
 
             // Prepare output resources
             outputDirectory.mkdirs();
@@ -73,7 +78,8 @@ public class ReleaseNotes extends AbstractMojo {
             // Create Ascii doc output
             try (PrintWriter writer = new PrintWriter(file)) {
                 ThreadLocal<BasicIssueType> previousIssueType = new ThreadLocal<>();
-                StreamSupport.stream(results.claim().getIssues().spliterator(), false) //
+                StreamSupport
+                        .stream(results.claim().getIssues().spliterator(), false) //
                         .map(i -> {
                             final Promise<Issue> currentIssue = client.getIssueClient().getIssue(i.getKey());
                             return currentIssue.claim();
@@ -84,8 +90,9 @@ public class ReleaseNotes extends AbstractMojo {
                                 writer.println("== " + i.getIssueType().getName());
                                 previousIssueType.set(i.getIssueType());
                             }
-                            writer.println("- link:" + jiraServerUri + "/browse/" + i.getKey() + "[" + i.getKey() + "]: "
-                                    + i.getSummary());
+                            writer
+                                    .println("- link:" + jiraServerUri + "/browse/" + i.getKey() + "[" + i.getKey()
+                                            + "]: " + i.getSummary());
                         });
             }
             LOGGER.info("File generated @ {}." + file.getAbsoluteFile().getAbsolutePath());
