@@ -3,6 +3,10 @@ def gitCredentials = usernamePassword(
     credentialsId: 'github-credentials',
     passwordVariable: 'GIT_PASSWORD',
     usernameVariable: 'GIT_LOGIN')
+def jiraCredentials = usernamePassword(
+    credentialsId: 'jira-credentials',
+    passwordVariable: 'JIRA_PASSWORD',
+    usernameVariable: 'JIRA_LOGIN')
 
 pipeline {
 
@@ -154,6 +158,10 @@ spec:
                     mvn -B -s $MAVEN_SETTINGS -Darguments='-DskipTests' -Dtag=${params.release_version} -DreleaseVersion=${params.release_version} -DdevelopmentVersion=${params.next_version} release:prepare
                     git push
                     mvn -B -s $MAVEN_SETTINGS -Darguments='-DskipTests' -DlocalCheckout=true -Dusername=${GIT_LOGIN} -Dpassword=${GIT_PASSWORD} release:perform
+                    mvn org.talend.daikon:daikon-documentation::release-notes -Duser=${JIRA_LOGIN} -Dpassword=${JIRA_PASSWORD} -Doutput=./releases
+                    git add ./releases
+                    git commit -m "Add ${params.release_version} release notes"
+                    git push
                   """
                 }
               }
@@ -161,7 +169,7 @@ spec:
             slackSend(
               color: "GREEN",
               channel: "daikon",
-              message: "Daikon version ${params.release_version} released. Next version: ${params.next_version}"
+              message: "Daikon version ${params.release_version} released. Next version: ${params.next_version}\n<a href="http://github.com/Talend/daikon/releases/${params.release_version}.adoc">Release notes</a>"
             )
         }
     }

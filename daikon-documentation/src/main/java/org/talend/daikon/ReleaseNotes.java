@@ -32,7 +32,7 @@ public class ReleaseNotes extends AbstractMojo {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReleaseNotes.class);
 
-    @Parameter(property = "project", required = true)
+    @Parameter(defaultValue = "TDKN", property = "project", required = true)
     private String project;
 
     @Parameter(defaultValue = "${project.version}", property = "version")
@@ -73,6 +73,8 @@ public class ReleaseNotes extends AbstractMojo {
 
             // Create Ascii doc output
             try (PrintWriter writer = new PrintWriter(file)) {
+                writer.println("= Daikon Release Notes (" + jiraVersion + ")");
+
                 ThreadLocal<BasicIssueType> previousIssueType = new ThreadLocal<>();
                 StreamSupport.stream(results.claim().getIssues().spliterator(), false) //
                         .map(i -> {
@@ -89,7 +91,7 @@ public class ReleaseNotes extends AbstractMojo {
                                     + i.getSummary());
                         });
             }
-            LOGGER.info("File generated @ {}." + file.getAbsoluteFile().getAbsolutePath());
+            LOGGER.info("Release notes generated @ '{}'.", file.getAbsoluteFile().getAbsolutePath());
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
