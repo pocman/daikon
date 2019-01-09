@@ -33,53 +33,48 @@ public class ReleaseNotes extends AbstractMojo {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReleaseNotes.class);
 
     @Parameter(property = "project", required = true)
-    private String projectName;
+    private String project;
 
     @Parameter(defaultValue = "${project.version}", property = "version")
     private String version;
 
     @Parameter(property = "user", required = true)
-    private String jiraUser;
+    private String user;
 
     @Parameter(property = "password", required = true)
-    private String jiraPassword;
+    private String password;
 
     @Parameter(defaultValue = "${project.build.directory}", property = "output")
-    private File outputDirectory;
+    private File output;
 
     @Parameter(defaultValue = "https://jira.talendforge.org", property = "server")
-    private String jiraServerUrl;
+    private String server;
 
     public void execute() throws MojoExecutionException {
         try {
-            final URI jiraServerUri = new URI(jiraServerUrl);
+            final URI jiraServerUri = new URI(server);
             final String jiraVersion = StringUtils.substringBefore(version, "-");
             LOGGER.debug("Jira version: {}", jiraVersion);
 
             // Create Jira client
-            LOGGER
-                    .info("Connecting using '{}' / '{}'", jiraUser,
-                            StringUtils.isEmpty(jiraPassword) ? "<empty>" : "****");
+            LOGGER.info("Connecting using '{}' / '{}'", user, StringUtils.isEmpty(password) ? "<empty>" : "****");
             final JiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
 
-            final JiraRestClient client =
-                    factory.createWithBasicHttpAuthentication(jiraServerUri, jiraUser, jiraPassword);
-            final Promise<SearchResult> results = client
-                    .getSearchClient()
-                    .searchJql("project = '" + projectName + "' and fixVersion='" + jiraVersion
-                            + "' and resolution = Fixed");
+            final JiraRestClient client = factory.createWithBasicHttpAuthentication(jiraServerUri, user, password);
+            final Promise<SearchResult> results = client //
+                    .getSearchClient() //
+                    .searchJql("project = '" + project + "' and fixVersion='" + jiraVersion + "'");
 
             // Prepare output resources
-            outputDirectory.mkdirs();
-            final File file = new File(outputDirectory, version + ".adoc");
+            output.mkdirs();
+            final File file = new File(output, version + ".adoc");
             LOGGER.debug("output file: {} ", file.getAbsolutePath());
             file.createNewFile();
 
             // Create Ascii doc output
             try (PrintWriter writer = new PrintWriter(file)) {
                 ThreadLocal<BasicIssueType> previousIssueType = new ThreadLocal<>();
-                StreamSupport
-                        .stream(results.claim().getIssues().spliterator(), false) //
+                StreamSupport.stream(results.claim().getIssues().spliterator(), false) //
                         .map(i -> {
                             final Promise<Issue> currentIssue = client.getIssueClient().getIssue(i.getKey());
                             return currentIssue.claim();
@@ -90,9 +85,8 @@ public class ReleaseNotes extends AbstractMojo {
                                 writer.println("== " + i.getIssueType().getName());
                                 previousIssueType.set(i.getIssueType());
                             }
-                            writer
-                                    .println("- link:" + jiraServerUri + "/browse/" + i.getKey() + "[" + i.getKey()
-                                            + "]: " + i.getSummary());
+                            writer.println("- link:" + jiraServerUri + "/browse/" + i.getKey() + "[" + i.getKey() + "]: "
+                                    + i.getSummary());
                         });
             }
             LOGGER.info("File generated @ {}." + file.getAbsoluteFile().getAbsolutePath());

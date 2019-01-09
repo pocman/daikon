@@ -13,10 +13,12 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.talend.daikon</groupId>
                 <artifactId>daikon-documentation</artifactId>
+                <version>${project.version}</version>
                 <configuration>
                     <user>xxxx</user>
-                    <passord>xxxx</passord>
+                    <password>xxxxx</password>
                     <server>https://jira.talendforge.org</server>
                     <project>TDKN</project>
                     <version>0.31.0</version>
