@@ -17,10 +17,10 @@ import scala.concurrent.{ExecutionContext, Future}
 import org.talend.daikon.dynamiclog.logging.common.LoggerLevelBindables._
 
 class LoggerLevelController @Inject()(
-  override val controllerComponents: ControllerComponents,
-  @Named(DISTRIBUTED_PUB_SUB_MEDIATOR) val distributedPubSubMediator: ActorRef,
-  implicit val configuration: Configuration,
-  implicit val ec: ExecutionContext
+                                       override val controllerComponents: ControllerComponents,
+                                       @Named(distributedPubSubMediatorName) val distributedPubSubMediator: ActorRef,
+                                       implicit val configuration: Configuration,
+                                       implicit val ec: ExecutionContext
 ) extends BaseController {
 
   // Play 2.x no longer supports paths with optional parameters

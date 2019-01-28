@@ -12,11 +12,11 @@ import play.api.libs.concurrent.AkkaGuiceSupport
 class DynamicLogModule extends ScalaModule with AkkaGuiceSupport {
 
   override def configure(): Unit = {
-    bindActor[LoggerLevelActor](LOGGER_LEVEL_ACTOR)
+    bindActor[LoggerLevelActor](loggerLevelActor)
   }
 
   @Provides
-  @Named(DISTRIBUTED_PUB_SUB_MEDIATOR)
+  @Named(distributedPubSubMediatorName)
   def providesDistributedPubSubMediator(actorSystem: ActorSystem): ActorRef =
     DistributedPubSub(actorSystem).mediator
 }
