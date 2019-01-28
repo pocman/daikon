@@ -24,9 +24,17 @@ Update your routes configuration file to add new routes :
 
 ### Test
 
-You can update the level with a curl command, for example :
+You can update the root level with a curl command, for example :
 
 `curl -i -X PUT -H "Accept-Language:en" -H "Content-Type:application/json" -d \ '{}'  'http://localhost:9020/logger/logger-level?level=DEBUG`
+
+Or for a specific class : 
+
+`curl -i -X PUT -H "Accept-Language:en" -H "Content-Type:application/json" -d \ '{}' 'http://localhost:9020/logger/logger-level/org.talend.mypackage.MyClass?level=DEBUG`
+
+Or for a package : 
+
+`curl -i -X PUT -H "Accept-Language:en" -H "Content-Type:application/json" -d \ '{}' 'http://localhost:9020/logger/logger-level/org.talend.mypackage?level=DEBUG`
 
 ## License
 

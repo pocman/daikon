@@ -65,29 +65,24 @@
         <dependency>
             <groupId>com.typesafe.play</groupId>
             <artifactId>play-guice_${scala-binary-version}</artifactId>
-            <version>${play2-version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.codingwell</groupId>
             <artifactId>scala-guice_${scala-binary-version}</artifactId>
-            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>${scala-version}</version>
         </dependency>
         <dependency>
             <groupId>com.typesafe.play</groupId>
             <artifactId>play_${scala-binary-version}</artifactId>
-            <version>${play2-version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.typesafe.play</groupId>
             <artifactId>play-guice_${scala-binary-version}</artifactId>
-            <version>${play2-version}</version>
         </dependency>
 
 

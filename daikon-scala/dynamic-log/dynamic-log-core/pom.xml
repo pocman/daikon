@@ -44,17 +44,7 @@
 
         <dependency>
             <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-persistence_${scala-binary-version}</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-cluster-sharding_${scala-binary-version}</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.typesafe.play</groupId>
-            <artifactId>play-slick_${scala-binary-version}</artifactId>
         </dependency>
 
         <!-- test dependencies -->
