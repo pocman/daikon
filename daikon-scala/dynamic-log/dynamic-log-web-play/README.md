@@ -14,7 +14,7 @@ Add the dependency in your sbt project file
 
 Please include the dynamic.conf file in your configuration file :
 
-`include "dynamic.conf"`
+`include "dynamiclog.conf"`
 
 ### Add routes
 
